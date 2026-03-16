@@ -1,0 +1,58 @@
+Patch summary
+
+Critical fixes applied
+- Fixed Postgres customer cancellation lock bug by changing FOR UPDATE to FOR UPDATE OF o in customer order cancellation flow.
+- Fixed mobile Expo auth networking so Expo Go on a real phone no longer depends on Android emulator host 10.0.2.2.
+- Cleared hardcoded mobile API base URL from app.json so the app can derive the host from Expo when needed.
+- Normalized mobile login to email + password only.
+- Fixed mobile registration payloads so they submit trimmed/lowercased email fields and valid driver defaults.
+- Fixed driver mobile registration default vehicle type to avoid backend enum rejection.
+- Added payout claim history endpoint.
+- Added payout request safeguards:
+  - requires a valid active payout bank account
+  - auto-uses primary payout account if one is not selected
+  - blocks duplicate pending/approved/processing claims
+  - prevents claiming above earned balance
+- Added admin payout management endpoints:
+  - payout claims list
+  - payout balances by driver and restaurant
+  - payout status approval/paid updates
+- Added admin payouts page in web app.
+- Added driver earnings claim UI and payout account UI in web app.
+- Added restaurant earnings claim UI and payout account UI in web app.
+
+Expo / mobile notes
+- Mobile login and registration are now designed for email + password.
+- The app now tries to use Expo host discovery first.
+- If your phone and laptop are on different networks, mobile auth can still fail until both are on the same Wi-Fi or you provide a reachable API URL.
+
+What to do after extracting
+1. Backend:
+   cd backend
+   npm install
+2. Frontend:
+   cd ../frontend
+   npm install
+3. Mobile:
+   cd ../mobile
+   npm install
+   npx expo start -c
+4. Docker stack:
+   docker compose down -v --remove-orphans
+   docker compose build --no-cache
+   docker compose up
+
+Recommended tests
+- Web customer registration
+- Web customer login
+- Mobile customer registration
+- Mobile customer login
+- Driver registration on mobile
+- Driver login after admin approval
+- Restaurant registration on mobile
+- Restaurant login after admin approval
+- Driver deliveries list and accept flow
+- Customer order cancellation
+- Driver claim request
+- Restaurant claim request
+- Admin payout approval

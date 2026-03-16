@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "Food Delivery Mobile",
+    "slug": "food-delivery-mobile",
+    "scheme": "fooddeliverymobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Allow location access to choose your exact delivery pin and improve delivery accuracy.",
+        "NSUserTrackingUsageDescription": "Used to improve live delivery experience."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#120702",
+        "foregroundImage": "./assets/logo.png"
+      },
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ],
+      "package": "com.fooddelivery.mobile"
+    },
+    "extra": {
+      "apiBaseUrl": "http://172.20.10.12:4000/api"
+    },
+    "icon": "./assets/logo.png",
+    "splash": {
+      "image": "./assets/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#120702"
+    },
+    "plugins": [
+      "expo-location"
+    ]
+  }
+}

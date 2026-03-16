@@ -1,0 +1,6 @@
+Seed accounts
+Admin: admin@foodsuite.local / admin123
+Restaurant owner: owner@urbanbites.local / restaurant123
+Restaurant manager: manager@urbanbites.local / restaurant123
+Customer: customer@foodsuite.local / customer123
+Driver: driver@foodsuite.local / driver123

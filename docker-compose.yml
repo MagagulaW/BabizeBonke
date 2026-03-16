@@ -1,0 +1,76 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: food_delivery_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: food_delivery
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d food_delivery"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  db_init:
+    image: postgis/postgis:16-3.4
+    container_name: food_delivery_db_init
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./food_delivery.sql:/work/food_delivery.sql:ro
+      - ./infra/db-init/20_seed.sql:/work/infra/db-init/20_seed.sql:ro
+      - ./infra/db-init/30_bootstrap_if_needed.sh:/work/infra/db-init/30_bootstrap_if_needed.sh:ro
+    entrypoint: ["/bin/sh", "/work/infra/db-init/30_bootstrap_if_needed.sh"]
+    restart: "no"
+
+  backend:
+    build:
+      context: ./backend
+    container_name: food_delivery_backend
+    restart: unless-stopped
+    environment:
+      PORT: 4000
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/food_delivery
+      JWT_SECRET: super_demo_secret_change_me
+      HOST: 0.0.0.0
+      CORS_ORIGIN: http://localhost:5173,http://127.0.0.1:5173,http://192.168.170.137:8081,exp://192.168.170.137:8081
+      SOCKET_ORIGIN: http://localhost:5173,http://127.0.0.1:5173
+      PAYMENT_PROVIDER: paystack
+      PAYMENT_PUBLISHABLE_KEY: ''
+      PAYMENT_CHECKOUT_BASE_URL: ''
+      TURN_URLS: ''
+      TURN_USERNAME: ''
+      TURN_CREDENTIAL: ''
+    depends_on:
+      db:
+        condition: service_healthy
+      db_init:
+        condition: service_completed_successfully
+    ports:
+      - "4000:4000"
+    volumes:
+      - backend_uploads:/app/uploads
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: http://localhost:4000/api
+    container_name: food_delivery_frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_started
+    ports:
+      - "5173:80"
+
+volumes:
+  postgres_data:
+  backend_uploads:

@@ -1,0 +1,42 @@
+Patched items in this ZIP:
+
+1) Backend driver acceptance logic aligned with visible delivery states.
+   Drivers can now accept unassigned deliveries shown in these states:
+   - awaiting_dispatch
+   - offer_in_progress
+   - assigned
+   - accepted
+
+2) Driver deliveries payload remains expanded with:
+   - customer_name
+   - customer_phone
+   - address_label
+   - address_line2
+   - suburb
+   - postal_code
+   - special_instructions
+   - delivery_instructions
+
+3) Web driver deliveries page already shows fuller customer/address/order data.
+
+4) Mobile driver deliveries page updated to also show:
+   - order number
+   - customer name and phone
+   - fuller address
+   - order note
+   - delivery note
+   - payout and customer order total
+
+5) Mobile package updated to Expo SDK 54-compatible core versions and all SDK 53 references removed from source package:
+   - expo ~54.0.33
+   - react 19.1.0
+   - react-native 0.81.4
+   - babel-preset-expo ~54.0.6
+
+Validation performed:
+- backend TypeScript build: passed
+- frontend TypeScript/Vite build: passed
+
+Note:
+- A full Expo runtime validation was not completed in this environment.
+- SDK 53 references were removed from the mobile source package to avoid mixed-version conflicts.
